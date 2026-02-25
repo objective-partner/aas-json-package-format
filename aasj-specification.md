@@ -1,21 +1,23 @@
 ---
 title: "AAS JSON (AASJ) Exchange Package File Format Specification"
-subtitle: "Version 2.0"
+subtitle: "Version 2.0, https://aasj.basyx-enterprise.net"
 author: "Alexander Gordt, objective partner AG"
 date: "2026-02"
-permalink: https://github.com/objective-partner/aas-json-package-format
 ---
 
 ## 1. General
 
 ### 1.1 Scope
 
-This specification defines the AAS JSON (AASJ) Exchange package format as an alternative to the AASX format specified in IDTA-01005. 
-The AASJ format prioritizes simplicity, debuggability, and flexible security while maintaining full compatibility with Asset Administration Shell data models.
+This specification defines the AAS JSON (AASJ) Exchange Package Format as an alternative to the AASX format 
+specified in IDTA-01005. 
+The AASJ format prioritizes simplicity, debuggability, and flexible security while maintaining full compatibility with 
+Asset Administration Shell data models.
 
 ### 1.2 Normative References
 
-The following documents are referred to in the text in such a way that some or all of their content constitutes requirements of this document:
+The following documents are referred to in the text in such a way that some or all of their content constitutes 
+requirements of this document:
 
 - **[RFC 7515]** JSON Web Signature (JWS)
 - **[RFC 7518]** JSON Web Algorithms (JWA)
@@ -63,7 +65,8 @@ The package SHALL contain files organized in a flat structure at the root level:
 | `binary-{hash}` | 0..* | Binary attachment files |
 
 
-The package MAY contain fully signed content (with JWS), but in that case it also MUST contain the decoded content as listed above. 
+The package MAY contain fully signed content (with JWS), but in that case it also MUST contain the decoded content as 
+listed above. 
 
 | File Pattern | Cardinality | Description |
 |------------------------------|-------------|----------------------------------------------|
@@ -357,12 +360,29 @@ The package format addresses these security concerns:
 
 ## Annex B: Path Generation Examples
 
-| Type | Identifier | Reference | Generated Path |
-|----------|-------------------------------|---------------------------------------------------|----------------------------------------------------------------------|
-| Shell | `https://example.com/aas/123` | - | `shell-c51b17f0c6525f4e81843ccd438cc77f70df39113530fc87182027b400de1ac3` |
-| Submodel | `https://example.com/sm/456` | - | `submodel-c1e09905a53cdcf8e2e5aa0a2335b4f9e3f3a921ca0e438d4cef8ec58c5162bc` |
-| Binary | `https://example.com/aas/123` | `thumbnail` | `binary-a7814558759e609ab85d4ff296f7cebd2c71aae5e1fa848a25593057bbaaf830` |
-| Binary | `https://example.com/sm/456` | `Documents[7].DocumentVersions[0].PreviewFile` | `binary-65c4166574278e6eebf24bbb8d55aafa655f8b6a963301cfef3bccba3290d961` |
+**Shell**
+
+- Identifier: `https://example.com/aas/123`
+- Reference: —
+- Path: `shell-c51b17f0c6525f4e81843ccd438cc77f70df39113530fc87182027b400de1ac3`
+
+**Submodel**
+
+- Identifier: `https://example.com/sm/456`
+- Reference: —
+- Path: `submodel-c1e09905a53cdcf8e2e5aa0a2335b4f9e3f3a921ca0e438d4cef8ec58c5162bc`
+
+**Binary (Thumbnail)**
+
+- Identifier: `https://example.com/aas/123`
+- Reference: `thumbnail`
+- Path: `binary-a7814558759e609ab85d4ff296f7cebd2c71aae5e1fa848a25593057bbaaf830`
+
+**Binary (Submodel Attachment)**
+
+- Identifier: `https://example.com/sm/456`
+- Reference: `Documents[7].DocumentVersions[0].PreviewFile`
+- Path: `binary-65c4166574278e6eebf24bbb8d55aafa655f8b6a963301cfef3bccba3290d961`
 
 ## Annex C: Security Examples
 
