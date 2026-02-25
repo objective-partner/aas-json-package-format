@@ -26,7 +26,8 @@ pandoc aasj-specification.md -o docs/index.html --toc --toc-depth=3 -V toc-title
 ```
 
 ## HTML version of the specification
-The HTML version of the specification is available at [https://objective-partner.github.io/aas-json-package-format/](https://objective-partner.github.io/aas-json-package-format/).
+The HTML version of the specification is available at 
+[https://aasj.basyx-enterprise.net](https://aasj.basyx-enterprise.net).
 
 ## License
 
