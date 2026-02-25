@@ -25,6 +25,9 @@ pandoc aasj-specification.md -o docs/index.html --toc --toc-depth=3 -V toc-title
   --lua-filter=docs/pdf-link.lua --standalone --css=style.css
 ```
 
+## HTML version of the specification
+The HTML version of the specification is available at [https://admin-shell-io.github.io/aas-specs-metamodel/](https://admin-shell-io.github.io/aas-specs-metamodel/).
+
 ## License
 
 This work is licensed under a [Creative Commons Attribution 4.0 International License](
