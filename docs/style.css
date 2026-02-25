@@ -1,0 +1,17 @@
+.pdf-link {
+  position: absolute;
+  top: 1em;
+  right: 1em;
+}
+
+table {
+  border-collapse: collapse;   /* keine Zwischenräume */
+  border-spacing: 0;
+}
+table, th, td {
+  border: 1px solid #555;      /* dunkelgrau */
+}
+th, td {
+  padding: 0.4em 0.6em;      /* normaler Innenabstand bleibt */
+}
+

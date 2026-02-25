@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Alexander Gordt, objective partner AG" />
+  <title>AAS JSON (AASJ) Exchange Package File Format Specification</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="pdf-link"><a href="aasj-specification.pdf">Specification as PDF</a></div>
+<header id="title-block-header">
+<h1 class="title">AAS JSON (AASJ) Exchange Package File Format
+Specification</h1>
+<p class="subtitle">Version 2.0</p>
+<p class="author">Alexander Gordt, objective partner AG</p>
+<p class="date">2026-02</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<h2 id="toc-title">Table of Contents</h2>
+<ul>
+<li><a href="#general" id="toc-general">1. General</a>
+<ul>
+<li><a href="#scope" id="toc-scope">1.1 Scope</a></li>
+<li><a href="#normative-references" id="toc-normative-references">1.2
+Normative References</a></li>
+<li><a href="#terms-and-definitions" id="toc-terms-and-definitions">1.3
+Terms and Definitions</a></li>
+<li><a href="#license" id="toc-license">1.4 License</a></li>
+</ul></li>
+<li><a href="#package-structure" id="toc-package-structure">2. Package
+Structure</a>
+<ul>
+<li><a href="#archive-format" id="toc-archive-format">2.1 Archive
+Format</a></li>
+<li><a href="#file-organization" id="toc-file-organization">2.2 File
+Organization</a></li>
+<li><a href="#path-generation-algorithm"
+id="toc-path-generation-algorithm">2.3 Path Generation
+Algorithm</a></li>
+</ul></li>
+<li><a href="#metadata-specification" id="toc-metadata-specification">3.
+Metadata Specification</a>
+<ul>
+<li><a href="#metadata-structure" id="toc-metadata-structure">3.1
+Metadata Structure</a></li>
+<li><a href="#content-object-specifications"
+id="toc-content-object-specifications">3.2 Content Object
+Specifications</a></li>
+</ul></li>
+<li><a href="#content-files" id="toc-content-files">4. Content Files</a>
+<ul>
+<li><a href="#identifiable-content-files"
+id="toc-identifiable-content-files">4.1 Identifiable Content
+Files</a></li>
+<li><a href="#binary-content-files" id="toc-binary-content-files">4.2
+Binary Content Files</a></li>
+</ul></li>
+<li><a href="#security-and-integrity" id="toc-security-and-integrity">5.
+Security and Integrity</a>
+<ul>
+<li><a href="#security-tiers" id="toc-security-tiers">5.1 Security
+Tiers</a></li>
+<li><a href="#hash-computation" id="toc-hash-computation">5.2 Hash
+Computation</a></li>
+<li><a href="#jws-signature-requirements"
+id="toc-jws-signature-requirements">5.3 JWS Signature
+Requirements</a></li>
+<li><a href="#jws-processing" id="toc-jws-processing">5.4 JWS
+Processing</a></li>
+</ul></li>
+<li><a href="#version-compatibility" id="toc-version-compatibility">6.
+Version Compatibility</a>
+<ul>
+<li><a href="#version-identification"
+id="toc-version-identification">6.1 Version Identification</a></li>
+<li><a href="#forward-compatibility" id="toc-forward-compatibility">6.2
+Forward Compatibility</a></li>
+<li><a href="#migration-rules" id="toc-migration-rules">6.3 Migration
+Rules</a></li>
+</ul></li>
+<li><a href="#security-considerations"
+id="toc-security-considerations">7. Security Considerations</a>
+<ul>
+<li><a href="#threat-model" id="toc-threat-model">7.1 Threat
+Model</a></li>
+<li><a href="#security-recommendations"
+id="toc-security-recommendations">7.2 Security Recommendations</a></li>
+</ul></li>
+<li><a href="#conformance" id="toc-conformance">8. Conformance</a>
+<ul>
+<li><a href="#conformance-classes" id="toc-conformance-classes">8.1
+Conformance Classes</a></li>
+</ul></li>
+<li><a href="#annex-a-example-metadata"
+id="toc-annex-a-example-metadata">Annex A: Example Metadata</a></li>
+<li><a href="#annex-b-path-generation-examples"
+id="toc-annex-b-path-generation-examples">Annex B: Path Generation
+Examples</a></li>
+<li><a href="#annex-c-security-examples"
+id="toc-annex-c-security-examples">Annex C: Security Examples</a>
+<ul>
+<li><a href="#c.1-tier-0---no-verification-shellcontent"
+id="toc-c.1-tier-0---no-verification-shellcontent">C.1 Tier 0 - No
+Verification (ShellContent)</a></li>
+<li><a href="#c.2-tier-1---sha256-only-shellcontent"
+id="toc-c.2-tier-1---sha256-only-shellcontent">C.2 Tier 1 - SHA256 Only
+(ShellContent)</a></li>
+<li><a href="#c.3-tier-2---sha256-jws-shellcontent"
+id="toc-c.3-tier-2---sha256-jws-shellcontent">C.3 Tier 2 - SHA256 + JWS
+(ShellContent)</a></li>
+<li><a href="#c.4-tier-3---sha256-jws-redundant-jws-file-shellcontent"
+id="toc-c.4-tier-3---sha256-jws-redundant-jws-file-shellcontent">C.4
+Tier 3 - SHA256 + JWS + Redundant JWS File (ShellContent)</a></li>
+<li><a href="#c.5-binarycontent---thumbnail"
+id="toc-c.5-binarycontent---thumbnail">C.5 BinaryContent -
+Thumbnail</a></li>
+<li><a href="#c.6-binarycontent---submodel-attachment"
+id="toc-c.6-binarycontent---submodel-attachment">C.6 BinaryContent -
+Submodel Attachment</a></li>
+</ul></li>
+</ul>
+</nav>
+<h2 id="general">1. General</h2>
+<h3 id="scope">1.1 Scope</h3>
+<p>This specification defines the AAS JSON (AASJ) Exchange package
+format as an alternative to the AASX format specified in IDTA-01005. The
+AASJ format prioritizes simplicity, debuggability, and flexible security
+while maintaining full compatibility with Asset Administration Shell
+data models.</p>
+<h3 id="normative-references">1.2 Normative References</h3>
+<p>The following documents are referred to in the text in such a way
+that some or all of their content constitutes requirements of this
+document:</p>
+<ul>
+<li><strong>[RFC 7515]</strong> JSON Web Signature (JWS)</li>
+<li><strong>[RFC 7518]</strong> JSON Web Algorithms (JWA)</li>
+<li><strong>[RFC 4648]</strong> Base64 Data Encodings</li>
+<li><strong>[RFC 8259]</strong> JavaScript Object Notation (JSON)</li>
+<li><strong>[FIPS 180-4]</strong> Secure Hash Standard (SHA-256)</li>
+<li><strong>[IDTA-01001]</strong> Asset Administration Shell Part 1</li>
+<li><strong>[ZIP]</strong> .ZIP File Format Specification (PKWARE
+Inc.)</li>
+</ul>
+<h3 id="terms-and-definitions">1.3 Terms and Definitions</h3>
+<table>
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 75%" />
+</colgroup>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Identifiable</strong></td>
+<td>An AAS element with a globally unique identifier (Shell, Submodel,
+ConceptDescription)</td>
+</tr>
+<tr>
+<td><strong>Binary Content</strong></td>
+<td>Supplementary file referenced by an Identifiable (thumbnail,
+attachment)</td>
+</tr>
+<tr>
+<td><strong>Binary Reference</strong></td>
+<td>Pointer to existing Binary Content for deduplication</td>
+</tr>
+<tr>
+<td><strong>Content Hash</strong></td>
+<td>SHA-256 hash of file content for integrity verification</td>
+</tr>
+<tr>
+<td><strong>JWS</strong></td>
+<td>JSON Web Signature providing cryptographic authenticity</td>
+</tr>
+<tr>
+<td><strong>Package Metadata</strong></td>
+<td>Index file (metadata.json) containing package structure</td>
+</tr>
+</tbody>
+</table>
+<h3 id="license">1.4 License</h3>
+<p>AAS JSON (AASJ) Exchange Package File Format Specification © 2026 by
+objective partner is licensed under CC BY 4.0. To view a copy of this
+license, visit https://creativecommons.org/licenses/by/4.0/</p>
+<h2 id="package-structure">2. Package Structure</h2>
+<h3 id="archive-format">2.1 Archive Format</h3>
+<p>The AASJ package SHALL use the ZIP archive format as specified in the
+.ZIP File Format Specification.</p>
+<ul>
+<li>The file extension for the AASJ format SHALL be
+<code>*.aasj</code></li>
+<li>The compression method MAY be DEFLATE, STORE, or any ZIP-supported
+algorithm</li>
+<li>The archive SHALL NOT use ZIP encryption if JWS signatures are
+present</li>
+</ul>
+<h3 id="file-organization">2.2 File Organization</h3>
+<p>The package SHALL contain files organized in a flat structure at the
+root level:</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 14%" />
+<col style="width: 51%" />
+</colgroup>
+<thead>
+<tr>
+<th>File Pattern</th>
+<th>Cardinality</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>metadata.json</code></td>
+<td>1..1</td>
+<td>Package metadata and index (mandatory)</td>
+</tr>
+<tr>
+<td><code>shell-{hash}</code></td>
+<td>0..*</td>
+<td>Asset Administration Shell files</td>
+</tr>
+<tr>
+<td><code>submodel-{hash}</code></td>
+<td>0..*</td>
+<td>Submodel files</td>
+</tr>
+<tr>
+<td><code>concept_description-{hash}</code></td>
+<td>0..*</td>
+<td>Concept Description files</td>
+</tr>
+<tr>
+<td><code>binary-{hash}</code></td>
+<td>0..*</td>
+<td>Binary attachment files</td>
+</tr>
+</tbody>
+</table>
+<p>The package MAY contain fully signed content (with JWS), but in that
+case it also MUST contain the decoded content as listed above.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 14%" />
+<col style="width: 51%" />
+</colgroup>
+<thead>
+<tr>
+<th>File Pattern</th>
+<th>Cardinality</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>shell-{hash}.jws</code></td>
+<td>0..*</td>
+<td>Asset Administration Shell files as embedded JWS</td>
+</tr>
+<tr>
+<td><code>submodel-{hash}.jws</code></td>
+<td>0..*</td>
+<td>Submodel files as embedded JWS</td>
+</tr>
+<tr>
+<td><code>concept_description-{hash}.jws</code></td>
+<td>0..*</td>
+<td>Concept Description files as embedded JWS</td>
+</tr>
+<tr>
+<td><code>binary-{hash}.jws</code></td>
+<td>0..*</td>
+<td>Binary attachment files as embedded JWS</td>
+</tr>
+</tbody>
+</table>
+<h3 id="path-generation-algorithm">2.3 Path Generation Algorithm</h3>
+<p>File paths SHALL be generated using the following algorithm:</p>
+<pre><code>path = type + &quot;-&quot; + SHA256(identifier [+ reference])</code></pre>
+<p>Where: - <code>type</code> in {<code>shell</code>,
+<code>submodel</code>, <code>concept_description</code>,
+<code>binary</code>} - <code>identifier</code> = Identifiable.id value -
+<code>reference</code> = idShort path or “thumbnail” (binary files
+only)</p>
+<h2 id="metadata-specification">3. Metadata Specification</h2>
+<h3 id="metadata-structure">3.1 Metadata Structure</h3>
+<p>The <code>metadata.json</code> file SHALL contain a JSON object with
+the following top-level fields:</p>
+<table>
+<colgroup>
+<col style="width: 26%" />
+<col style="width: 8%" />
+<col style="width: 14%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Cardinality</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>version</code></td>
+<td>string</td>
+<td>0..1</td>
+<td>Package format version (“1” or “2”)</td>
+</tr>
+<tr>
+<td><code>aasMetamodelVersion</code></td>
+<td>string</td>
+<td>0..1</td>
+<td>AAS metamodel version (default: “3.0”)</td>
+</tr>
+<tr>
+<td><code>shells</code></td>
+<td>array</td>
+<td>1..1</td>
+<td>Array of ShellContent objects</td>
+</tr>
+<tr>
+<td><code>submodels</code></td>
+<td>array</td>
+<td>1..1</td>
+<td>Array of SubmodelContent objects</td>
+</tr>
+<tr>
+<td><code>conceptDescriptions</code></td>
+<td>array</td>
+<td>1..1</td>
+<td>Array of ConceptDescriptionContent objects</td>
+</tr>
+<tr>
+<td><code>binaries</code></td>
+<td>array</td>
+<td>1..1</td>
+<td>Array of BinaryContent or BinaryReference objects</td>
+</tr>
+</tbody>
+</table>
+<h3 id="content-object-specifications">3.2 Content Object
+Specifications</h3>
+<h4 id="shellcontent-object">3.2.1 ShellContent Object</h4>
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 8%" />
+<col style="width: 12%" />
+<col style="width: 8%" />
+<col style="width: 55%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Cardinality</th>
+<th>Version</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>identifier</code></td>
+<td>string</td>
+<td>1..1</td>
+<td>1,2</td>
+<td>Shell identifier (IRI/URI)</td>
+</tr>
+<tr>
+<td><code>path</code></td>
+<td>string</td>
+<td>1..1</td>
+<td>1,2</td>
+<td>File path within archive</td>
+</tr>
+<tr>
+<td><code>sha256</code></td>
+<td>string</td>
+<td>0..1*</td>
+<td>2</td>
+<td>SHA-256 hash of content</td>
+</tr>
+<tr>
+<td><code>jwsHeader</code></td>
+<td>string</td>
+<td>0..1**</td>
+<td>2</td>
+<td>Base64url-encoded JWS header</td>
+</tr>
+<tr>
+<td><code>jwsSignature</code></td>
+<td>string</td>
+<td>0..1**</td>
+<td>2</td>
+<td>Base64url-encoded JWS signature</td>
+</tr>
+<tr>
+<td><code>jwsAttached</code></td>
+<td>boolean</td>
+<td>0..1</td>
+<td>2</td>
+<td>Flag if redundant JWS file is included, default = false</td>
+</tr>
+</tbody>
+</table>
+<p>*Required if jwsHeader or jwsSignature present **Ether both or
+neither must be present</p>
+<h4 id="submodelcontent-object">3.2.2 SubmodelContent Object</h4>
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 8%" />
+<col style="width: 12%" />
+<col style="width: 8%" />
+<col style="width: 55%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Cardinality</th>
+<th>Version</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>identifier</code></td>
+<td>string</td>
+<td>1..1</td>
+<td>1,2</td>
+<td>Submodel identifier (IRI/URI)</td>
+</tr>
+<tr>
+<td><code>path</code></td>
+<td>string</td>
+<td>1..1</td>
+<td>1,2</td>
+<td>File path within archive</td>
+</tr>
+<tr>
+<td><code>sha256</code></td>
+<td>string</td>
+<td>0..1*</td>
+<td>2</td>
+<td>SHA-256 hash of content</td>
+</tr>
+<tr>
+<td><code>jwsHeader</code></td>
+<td>string</td>
+<td>0..1**</td>
+<td>2</td>
+<td>Base64url-encoded JWS header</td>
+</tr>
+<tr>
+<td><code>jwsSignature</code></td>
+<td>string</td>
+<td>0..1**</td>
+<td>2</td>
+<td>Base64url-encoded JWS signature</td>
+</tr>
+<tr>
+<td><code>jwsAttached</code></td>
+<td>boolean</td>
+<td>0..1</td>
+<td>2</td>
+<td>Flag if redundant JWS file is included, default = false</td>
+</tr>
+</tbody>
+</table>
+<p>*Required if jwsHeader or jwsSignature present **Ether both or
+neither must be present</p>
+<h4 id="conceptdescriptioncontent-object">3.2.3
+ConceptDescriptionContent Object</h4>
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 8%" />
+<col style="width: 12%" />
+<col style="width: 8%" />
+<col style="width: 55%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Cardinality</th>
+<th>Version</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>identifier</code></td>
+<td>string</td>
+<td>1..1</td>
+<td>1,2</td>
+<td>ConceptDescription identifier</td>
+</tr>
+<tr>
+<td><code>path</code></td>
+<td>string</td>
+<td>1..1</td>
+<td>1,2</td>
+<td>File path within archive</td>
+</tr>
+<tr>
+<td><code>sha256</code></td>
+<td>string</td>
+<td>0..1*</td>
+<td>2</td>
+<td>SHA-256 hash of content</td>
+</tr>
+<tr>
+<td><code>jwsHeader</code></td>
+<td>string</td>
+<td>0..1**</td>
+<td>2</td>
+<td>Base64url-encoded JWS header</td>
+</tr>
+<tr>
+<td><code>jwsSignature</code></td>
+<td>string</td>
+<td>0..1**</td>
+<td>2</td>
+<td>Base64url-encoded JWS signature</td>
+</tr>
+<tr>
+<td><code>jwsAttached</code></td>
+<td>boolean</td>
+<td>0..1</td>
+<td>2</td>
+<td>Flag if redundant JWS file is included, default = false</td>
+</tr>
+</tbody>
+</table>
+<p>*Required if jwsHeader or jwsSignature present **Ether both or
+neither must be present</p>
+<h4 id="binarycontent-object">3.2.4 BinaryContent Object</h4>
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 8%" />
+<col style="width: 12%" />
+<col style="width: 8%" />
+<col style="width: 55%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Cardinality</th>
+<th>Version</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>identifier</code></td>
+<td>string</td>
+<td>1..1</td>
+<td>1,2</td>
+<td>Parent Identifiable identifier</td>
+</tr>
+<tr>
+<td><code>reference</code></td>
+<td>string</td>
+<td>1..1</td>
+<td>1,2</td>
+<td>Reference path within parent</td>
+</tr>
+<tr>
+<td><code>path</code></td>
+<td>string</td>
+<td>1..1</td>
+<td>1,2</td>
+<td>File path within archive</td>
+</tr>
+<tr>
+<td><code>filename</code></td>
+<td>string</td>
+<td>0..1</td>
+<td>2</td>
+<td>Original filename</td>
+</tr>
+<tr>
+<td><code>contentType</code></td>
+<td>string</td>
+<td>0..1</td>
+<td>2</td>
+<td>MIME type</td>
+</tr>
+<tr>
+<td><code>sha256</code></td>
+<td>string</td>
+<td>0..1*</td>
+<td>2</td>
+<td>SHA-256 hash of content</td>
+</tr>
+<tr>
+<td><code>jwsHeader</code></td>
+<td>string</td>
+<td>0..1**</td>
+<td>2</td>
+<td>Base64url-encoded JWS header</td>
+</tr>
+<tr>
+<td><code>jwsSignature</code></td>
+<td>string</td>
+<td>0..1**</td>
+<td>2</td>
+<td>Base64url-encoded JWS signature</td>
+</tr>
+<tr>
+<td><code>jwsAttached</code></td>
+<td>boolean</td>
+<td>0..1</td>
+<td>2</td>
+<td>Flag if redundant JWS file is included, default = false</td>
+</tr>
+</tbody>
+</table>
+<p>*Required if jwsHeader or jwsSignature present **Ether both or
+neither must be present</p>
+<h4 id="binaryreference-object">3.2.5 BinaryReference Object</h4>
+<table>
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 9%" />
+<col style="width: 13%" />
+<col style="width: 9%" />
+<col style="width: 43%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Cardinality</th>
+<th>Version</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>identifier</code></td>
+<td>string</td>
+<td>1..1</td>
+<td>2</td>
+<td>Target Identifiable identifier</td>
+</tr>
+<tr>
+<td><code>reference</code></td>
+<td>string</td>
+<td>1..1</td>
+<td>2</td>
+<td>Target reference path</td>
+</tr>
+<tr>
+<td><code>copy_from_identifier</code></td>
+<td>string</td>
+<td>1..1</td>
+<td>2</td>
+<td>Source Identifiable identifier</td>
+</tr>
+<tr>
+<td><code>copy_from_reference</code></td>
+<td>string</td>
+<td>1..1</td>
+<td>2</td>
+<td>Source reference path</td>
+</tr>
+<tr>
+<td><code>filename</code></td>
+<td>string</td>
+<td>0..1</td>
+<td>2</td>
+<td>Original filename (inherited)</td>
+</tr>
+<tr>
+<td><code>contentType</code></td>
+<td>string</td>
+<td>0..1</td>
+<td>2</td>
+<td>MIME type (inherited)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="content-files">4. Content Files</h2>
+<h3 id="identifiable-content-files">4.1 Identifiable Content Files</h3>
+<p>Files containing Identifiables (Shells, Submodels,
+ConceptDescriptions) SHALL:</p>
+<ol type="1">
+<li>Be serialized as JSON according to the AAS metamodel
+specification</li>
+<li>Use UTF-8 encoding without BOM</li>
+<li>Contain exactly one complete Identifiable element</li>
+<li>NOT include referenced Binary Content inline</li>
+</ol>
+<h3 id="binary-content-files">4.2 Binary Content Files</h3>
+<p>Binary files SHALL:</p>
+<ol type="1">
+<li>Be stored in their original format without modification</li>
+<li>Be referenced by exactly one BinaryContent entry in metadata</li>
+<li>MAY be referenced by multiple BinaryReference entries</li>
+</ol>
+<h2 id="security-and-integrity">5. Security and Integrity</h2>
+<h3 id="security-tiers">5.1 Security Tiers</h3>
+<p>The package format SHALL support four security tiers:</p>
+<table>
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr>
+<th>Tier</th>
+<th>SHA256</th>
+<th>JWS</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Optional</td>
+<td>No</td>
+<td>Legacy compatibility, trusted environments</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Required</td>
+<td>No</td>
+<td>Basic integrity verification</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Required</td>
+<td>Required</td>
+<td>Full cryptographic validation</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Required</td>
+<td>Required</td>
+<td>Full cryptographic validation without logic</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hash-computation">5.2 Hash Computation</h3>
+<p>When SHA256 hashes are used:</p>
+<ol type="1">
+<li>The hash SHALL be computed over the raw file bytes</li>
+<li>The hash SHALL be stored as lowercase hexadecimal string</li>
+<li>The hash SHALL NOT include any prefix (e.g., “sha256:”)</li>
+</ol>
+<h3 id="jws-signature-requirements">5.3 JWS Signature Requirements</h3>
+<p>When JWS signatures are used:</p>
+<ol type="1">
+<li>The sha256 field MUST be present and valid</li>
+<li>The jwsHeader field MUST contain a valid JWS header</li>
+<li>The jwsSignature field MUST contain a valid signature</li>
+<li>The signature SHALL be computed according to RFC 7515</li>
+<li>The complete compact representation of “header.payload.signature”
+MAY be stored in a separate .jws file if jwsAttached is set to true</li>
+</ol>
+<h3 id="jws-processing">5.4 JWS Processing</h3>
+<p>For signed content, the following process SHALL be applied:</p>
+<p><strong>Export (Signing)</strong>: 1. Obtain JWS with embedded
+payload from signing service 2. Split JWS at period delimiters:
+<code>header.payload.signature</code> 3. Store base64url-decoded payload
+as file content 4. Store header in jwsHeader field 5. Store signature in
+jwsSignature field 6. Compute and store SHA256 of decoded payload 7.
+Optionally include redundant .jws file and set jwsAttached to true</p>
+<p><strong>Import (Validation) - jwsAttached is false</strong>: 1.
+Verify SHA256 hash of file content 2. Base64url-encode file content to
+recreate payload. <em>ATTENTION</em>: Pure byte processing must be used
+to avoid byte manipulation by any string / text / JSON processing. 3.
+Reconstruct JWS: <code>{jwsHeader}.{payload}.{jwsSignature}</code> 4.
+Validate signature using appropriate algorithm and key</p>
+<p><strong>Import (Validation) - jwsAttached is true</strong>: 1.
+Validate signature using appropriate algorithm and key</p>
+<h2 id="version-compatibility">6. Version Compatibility</h2>
+<h3 id="version-identification">6.1 Version Identification</h3>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Identification Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>version</code> absent or “1”, no security fields</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>version</code> = “2”, security fields optional</td>
+</tr>
+</tbody>
+</table>
+<h3 id="forward-compatibility">6.2 Forward Compatibility</h3>
+<p>Version 1 readers: - SHALL ignore unknown fields in metadata.json -
+SHALL process content files normally - SHALL NOT validate security
+fields</p>
+<p>Version 2 readers: - SHALL process Version 1 packages - SHALL apply
+security validation when fields present - MAY upgrade Version 1 packages
+to Version 2</p>
+<h3 id="migration-rules">6.3 Migration Rules</h3>
+<p><strong>Version 1 to Version 2</strong>: 1. Set <code>version</code>
+to “2” 2. Add <code>aasMetamodelVersion</code>, default is “3.0” 3.
+Optionally compute sha256 for content 4. Optionally add
+filename/contentType to binaries</p>
+<h2 id="security-considerations">7. Security Considerations</h2>
+<h3 id="threat-model">7.1 Threat Model</h3>
+<p>The package format addresses these security concerns:</p>
+<table>
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 42%" />
+<col style="width: 21%" />
+</colgroup>
+<thead>
+<tr>
+<th>Threat</th>
+<th>Mitigation</th>
+<th>Security Tier</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content tampering</td>
+<td>SHA256 hash validation</td>
+<td>1, 2</td>
+</tr>
+<tr>
+<td>Origin spoofing</td>
+<td>JWS signature validation</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Replay attacks</td>
+<td>Timestamp validation in JWS</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Information disclosure</td>
+<td>ZIP encryption (optional)</td>
+<td>All</td>
+</tr>
+<tr>
+<td>Resource exhaustion</td>
+<td>Size limits, streaming</td>
+<td>All</td>
+</tr>
+</tbody>
+</table>
+<h3 id="security-recommendations">7.2 Security Recommendations</h3>
+<ol type="1">
+<li>Implementations SHOULD validate content before processing</li>
+<li>Untrusted packages SHOULD use Security Tier 2</li>
+<li>Signing keys SHOULD be properly managed and rotated</li>
+<li>Implementations SHOULD limit package and file sizes</li>
+<li>Sensitive content SHOULD use additional encryption</li>
+</ol>
+<h2 id="conformance">8. Conformance</h2>
+<h3 id="conformance-classes">8.1 Conformance Classes</h3>
+<table>
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 64%" />
+</colgroup>
+<thead>
+<tr>
+<th>Class</th>
+<th>Requirements</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Producer-Basic</strong></td>
+<td>Generate valid Version 1 packages</td>
+</tr>
+<tr>
+<td><strong>Producer-Standard</strong></td>
+<td>Generate Version 2 packages with SHA256</td>
+</tr>
+<tr>
+<td><strong>Producer-Full</strong></td>
+<td>Generate Version 2 packages with JWS</td>
+</tr>
+<tr>
+<td><strong>Consumer-Basic</strong></td>
+<td>Read Version 1 packages</td>
+</tr>
+<tr>
+<td><strong>Consumer-Standard</strong></td>
+<td>Read Version 2, validate SHA256</td>
+</tr>
+<tr>
+<td><strong>Consumer-Full</strong></td>
+<td>Read Version 2, validate JWS</td>
+</tr>
+</tbody>
+</table>
+<h2 id="annex-a-example-metadata">Annex A: Example Metadata</h2>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;version&quot;</span><span class="fu">:</span> <span class="st">&quot;2&quot;</span><span class="fu">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;aasMetamodelVersion&quot;</span><span class="fu">:</span> <span class="st">&quot;3.0&quot;</span><span class="fu">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;shells&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;identifier&quot;</span><span class="fu">:</span> <span class="st">&quot;https://example.com/aas/123&quot;</span><span class="fu">,</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;path&quot;</span><span class="fu">:</span> <span class="st">&quot;shell-c51b17f0c6525f4e81843ccd438cc77f70df39113530fc87182027b400de1ac3&quot;</span><span class="fu">,</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;sha256&quot;</span><span class="fu">:</span> <span class="st">&quot;a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4e5f67890&quot;</span><span class="fu">,</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;jwsHeader&quot;</span><span class="fu">:</span> <span class="st">&quot;eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9&quot;</span><span class="fu">,</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;jwsSignature&quot;</span><span class="fu">:</span> <span class="st">&quot;SflKxwRJSMeKKF2QT4fwpMeJf36POk&quot;</span><span class="fu">,</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;jwsAttached&quot;</span><span class="fu">:</span> <span class="kw">false</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;submodels&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;identifier&quot;</span><span class="fu">:</span> <span class="st">&quot;https://example.com/sm/456&quot;</span><span class="fu">,</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;path&quot;</span><span class="fu">:</span> <span class="st">&quot;submodel-c1e09905a53cdcf8e2e5aa0a2335b4f9e3f3a921ca0e438d4cef8ec58c5162bc&quot;</span><span class="fu">,</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;sha256&quot;</span><span class="fu">:</span> <span class="st">&quot;b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4e5f67890a1&quot;</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;conceptDescriptions&quot;</span><span class="fu">:</span> <span class="ot">[]</span><span class="fu">,</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;binaries&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;identifier&quot;</span><span class="fu">:</span> <span class="st">&quot;https://example.com/aas/123&quot;</span><span class="fu">,</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;reference&quot;</span><span class="fu">:</span> <span class="st">&quot;thumbnail&quot;</span><span class="fu">,</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;path&quot;</span><span class="fu">:</span> <span class="st">&quot;binary-a7814558759e609ab85d4ff296f7cebd2c71aae5e1fa848a25593057bbaaf830&quot;</span><span class="fu">,</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;filename&quot;</span><span class="fu">:</span> <span class="st">&quot;thumbnail.png&quot;</span><span class="fu">,</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;contentType&quot;</span><span class="fu">:</span> <span class="st">&quot;image/png&quot;</span><span class="fu">,</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;sha256&quot;</span><span class="fu">:</span> <span class="st">&quot;c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2&quot;</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;identifier&quot;</span><span class="fu">:</span> <span class="st">&quot;https://example.com/sm/456&quot;</span><span class="fu">,</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;reference&quot;</span><span class="fu">:</span> <span class="st">&quot;Documents[7].DocumentVersions[0].PreviewFile&quot;</span><span class="fu">,</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;path&quot;</span><span class="fu">:</span> <span class="st">&quot;binary-65c4166574278e6eebf24bbb8d55aafa655f8b6a963301cfef3bccba3290d961&quot;</span><span class="fu">,</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;filename&quot;</span><span class="fu">:</span> <span class="st">&quot;preview.pdf&quot;</span><span class="fu">,</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;contentType&quot;</span><span class="fu">:</span> <span class="st">&quot;application/pdf&quot;</span><span class="fu">,</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;sha256&quot;</span><span class="fu">:</span> <span class="st">&quot;d4e5f67890a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3&quot;</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h2 id="annex-b-path-generation-examples">Annex B: Path Generation
+Examples</h2>
+<table>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 19%" />
+<col style="width: 31%" />
+<col style="width: 43%" />
+</colgroup>
+<thead>
+<tr>
+<th>Type</th>
+<th>Identifier</th>
+<th>Reference</th>
+<th>Generated Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Shell</td>
+<td><code>https://example.com/aas/123</code></td>
+<td>-</td>
+<td><code>shell-c51b17f0c6525f4e81843ccd438cc77f70df39113530fc87182027b400de1ac3</code></td>
+</tr>
+<tr>
+<td>Submodel</td>
+<td><code>https://example.com/sm/456</code></td>
+<td>-</td>
+<td><code>submodel-c1e09905a53cdcf8e2e5aa0a2335b4f9e3f3a921ca0e438d4cef8ec58c5162bc</code></td>
+</tr>
+<tr>
+<td>Binary</td>
+<td><code>https://example.com/aas/123</code></td>
+<td><code>thumbnail</code></td>
+<td><code>binary-a7814558759e609ab85d4ff296f7cebd2c71aae5e1fa848a25593057bbaaf830</code></td>
+</tr>
+<tr>
+<td>Binary</td>
+<td><code>https://example.com/sm/456</code></td>
+<td><code>Documents[7].DocumentVersions[0].PreviewFile</code></td>
+<td><code>binary-65c4166574278e6eebf24bbb8d55aafa655f8b6a963301cfef3bccba3290d961</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="annex-c-security-examples">Annex C: Security Examples</h2>
+<h3 id="c.1-tier-0---no-verification-shellcontent">C.1 Tier 0 - No
+Verification (ShellContent)</h3>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;identifier&quot;</span><span class="fu">:</span> <span class="st">&quot;https://example.com/aas/123&quot;</span><span class="fu">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;path&quot;</span><span class="fu">:</span> <span class="st">&quot;shell-c51b17f0c6525f4e81843ccd438cc77f70df39113530fc87182027b400de1ac3&quot;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="c.2-tier-1---sha256-only-shellcontent">C.2 Tier 1 - SHA256 Only
+(ShellContent)</h3>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;identifier&quot;</span><span class="fu">:</span> <span class="st">&quot;https://example.com/aas/123&quot;</span><span class="fu">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;path&quot;</span><span class="fu">:</span> <span class="st">&quot;shell-c51b17f0c6525f4e81843ccd438cc77f70df39113530fc87182027b400de1ac3&quot;</span><span class="fu">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;sha256&quot;</span><span class="fu">:</span> <span class="st">&quot;a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4e5f67890&quot;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="c.3-tier-2---sha256-jws-shellcontent">C.3 Tier 2 - SHA256 + JWS
+(ShellContent)</h3>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;identifier&quot;</span><span class="fu">:</span> <span class="st">&quot;https://example.com/aas/123&quot;</span><span class="fu">,</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;path&quot;</span><span class="fu">:</span> <span class="st">&quot;shell-c51b17f0c6525f4e81843ccd438cc77f70df39113530fc87182027b400de1ac3&quot;</span><span class="fu">,</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;sha256&quot;</span><span class="fu">:</span> <span class="st">&quot;a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4e5f67890&quot;</span><span class="fu">,</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;jwsHeader&quot;</span><span class="fu">:</span> <span class="st">&quot;eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9&quot;</span><span class="fu">,</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;jwsSignature&quot;</span><span class="fu">:</span> <span class="st">&quot;SflKxwRJSMeKKF2QT4fwpMeJf36POk&quot;</span><span class="fu">,</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;jwsAttached&quot;</span><span class="fu">:</span> <span class="kw">false</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="c.4-tier-3---sha256-jws-redundant-jws-file-shellcontent">C.4
+Tier 3 - SHA256 + JWS + Redundant JWS File (ShellContent)</h3>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;identifier&quot;</span><span class="fu">:</span> <span class="st">&quot;https://example.com/aas/123&quot;</span><span class="fu">,</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;path&quot;</span><span class="fu">:</span> <span class="st">&quot;shell-c51b17f0c6525f4e81843ccd438cc77f70df39113530fc87182027b400de1ac3&quot;</span><span class="fu">,</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;sha256&quot;</span><span class="fu">:</span> <span class="st">&quot;a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4e5f67890&quot;</span><span class="fu">,</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;jwsHeader&quot;</span><span class="fu">:</span> <span class="st">&quot;eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9&quot;</span><span class="fu">,</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;jwsSignature&quot;</span><span class="fu">:</span> <span class="st">&quot;SflKxwRJSMeKKF2QT4fwpMeJf36POk&quot;</span><span class="fu">,</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;jwsAttached&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>Implicit path for redundant JWS file:
+<code>shell-c51b17f0c6525f4e81843ccd438cc77f70df39113530fc87182027b400de1ac3.jws</code></p>
+<h3 id="c.5-binarycontent---thumbnail">C.5 BinaryContent -
+Thumbnail</h3>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;identifier&quot;</span><span class="fu">:</span> <span class="st">&quot;https://example.com/aas/123&quot;</span><span class="fu">,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;reference&quot;</span><span class="fu">:</span> <span class="st">&quot;thumbnail&quot;</span><span class="fu">,</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;path&quot;</span><span class="fu">:</span> <span class="st">&quot;binary-a7814558759e609ab85d4ff296f7cebd2c71aae5e1fa848a25593057bbaaf830&quot;</span><span class="fu">,</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;filename&quot;</span><span class="fu">:</span> <span class="st">&quot;thumbnail.png&quot;</span><span class="fu">,</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;contentType&quot;</span><span class="fu">:</span> <span class="st">&quot;image/png&quot;</span><span class="fu">,</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;sha256&quot;</span><span class="fu">:</span> <span class="st">&quot;c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2&quot;</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="c.6-binarycontent---submodel-attachment">C.6 BinaryContent -
+Submodel Attachment</h3>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;identifier&quot;</span><span class="fu">:</span> <span class="st">&quot;https://example.com/sm/456&quot;</span><span class="fu">,</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;reference&quot;</span><span class="fu">:</span> <span class="st">&quot;Documents[7].DocumentVersions[0].PreviewFile&quot;</span><span class="fu">,</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;path&quot;</span><span class="fu">:</span> <span class="st">&quot;binary-65c4166574278e6eebf24bbb8d55aafa655f8b6a963301cfef3bccba3290d961&quot;</span><span class="fu">,</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;filename&quot;</span><span class="fu">:</span> <span class="st">&quot;preview.pdf&quot;</span><span class="fu">,</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;contentType&quot;</span><span class="fu">:</span> <span class="st">&quot;application/pdf&quot;</span><span class="fu">,</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;sha256&quot;</span><span class="fu">:</span> <span class="st">&quot;d4e5f67890a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3d4e5f67890a1b2c3&quot;</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+</body>
+</html>
