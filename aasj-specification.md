@@ -93,6 +93,8 @@ Where:
 
 ### 3.1 Metadata Structure
 
+![Model overview](model.png)
+
 The `metadata.json` file SHALL contain a JSON object with the following top-level fields:
 
 | Field | Type | Cardinality | Description |

@@ -15,13 +15,14 @@ To build the pdf document, use this command:
 
 ```bash
 pandoc aasj-specification.md -o docs/aasj-specification.pdf --toc --toc-depth=3 -V geometry:margin=2.5cm \
-  -V toc-title:"Table of Contents" -V mainfont:"Arial" -V monofont:"Menlo" --pdf-engine=xelatex
+  -V toc-title:"Table of Contents" -V mainfont:"Arial" -V monofont:"Menlo" --pdf-engine=xelatex \
+  --resource-path=.:docs -f markdown-implicit_figures
 ```
 
 To build the html document, use this command:
 
 ```bash
-pandoc aasj-specification.md -o docs/index.html --toc --toc-depth=3 -V toc-title:"Table of Contents" \ 
+pandoc aasj-specification.md -o docs/index.html --toc --toc-depth=3 -V toc-title:"Table of Contents" \
   --lua-filter=docs/pdf-link.lua --standalone --css=style.css
 ```
 

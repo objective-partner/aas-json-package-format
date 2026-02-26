@@ -1,0 +1,74 @@
+@startuml metadata_model
+
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+
+abstract class AbstractBinaryContent {
+    + identifier : str
+    + reference : str
+    + filename : Optional[str]
+    + content_type : Optional[str]
+}
+
+class BinaryContent {
+    + path : str
+    + sha256 : Optional[str]
+    + jwsHeader : Optional[str]
+    + jwsSignature : Optional[str]
+
+}
+
+class BinaryReference {
+    + copy_from_identifier : str
+    + copy_from_reference : str
+}
+
+class ShellContent {
+    + identifier : str
+    + path : str
+    + sha256 : Optional[str]
+    + jwsHeader : Optional[str]
+    + jwsSignature : Optional[str]
+}
+
+class SubmodelContent {
+    + identifier : str
+    + path : str
+    + sha256 : Optional[str]
+    + jwsHeader : Optional[str]
+    + jwsSignature : Optional[str]
+}
+
+class ConceptDescriptionContent {
+    + identifier : str
+    + path : str
+    + sha256 : Optional[str]
+    + jwsHeader : Optional[str]
+    + jwsSignature : Optional[str]
+}
+
+class PackageContent {
+    + version : Optional[str]
+    + aas_metamodel_version : Optional[str]
+    + shells : List[ShellContent]
+    + submodels : List[SubmodelContent]
+    + concept_descriptions : List[ConceptDescriptionContent]
+    + binaries : List[AbstractBinaryContent]
+}
+
+enum PathType {
+    SHELL
+    SUBMODEL
+    CONCEPT_DESCRIPTION
+    BINARY
+}
+
+AbstractBinaryContent <|-- BinaryContent
+AbstractBinaryContent <|-- BinaryReference
+
+PackageContent o-- "*" ShellContent : shells
+PackageContent o-- "*" SubmodelContent : submodels
+PackageContent o-- "*" ConceptDescriptionContent : conceptDescriptions
+PackageContent o-- "*" AbstractBinaryContent : binaries
+
+@enduml
